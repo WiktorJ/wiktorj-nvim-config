@@ -49,9 +49,13 @@ return {
       },
       setup = {
         [ruff] = function()
-          LazyVim.lsp.on_attach(function(client, _)
-            -- Disable hover in favor of Pyright
-            client.server_capabilities.hoverProvider = false
+          Snacks.util.lsp.on(function(id, _)
+            local client = vim.lsp.get_client_by_id(id)
+
+            -- Ensure the client was found before accessing properties
+            if client then
+              client.server_capabilities.hoverProvider = false
+            end
           end, ruff)
         end,
       },
@@ -105,7 +109,6 @@ return {
 
   {
     "linux-cultist/venv-selector.nvim",
-    branch = "regexp", -- Use this branch for the new version
     cmd = "VenvSelect",
     dependencies = {
       "neovim/nvim-lspconfig",
